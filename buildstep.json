@@ -1,0 +1,24 @@
+{ "builders": [{
+		"type": "digitalocean",
+		"api_key": "",
+		"client_id": "",
+		"region_id": 2,
+		"snapshot_name": "buildstep-{{timestamp}}"
+	}],
+	"provisioners": [{
+		"type": "shell",
+		"inline": [
+			"sleep 30",
+			"sudo apt-get -y update",
+			"sudo apt-get -y install git",
+			"git clone https://github.com/progrium/buildstep /opt/buildstep",
+			"chmod +x /opt/buildstep/stack/prepare",
+			"chmod +x /opt/buildstep/stack/builder",
+			"mkdir -p /build",
+			"cp /opt/buildstep/stack/packages.txt /build/packages.txt",
+			"cp /opt/buildstep/stack/buildpacks.txt /build/buildpacks.txt",
+			"mkdir -p /app && cd /app && tar -xzvf /tmp/release.tar.gz",
+			"/opt/buildstep/stack/prepare"
+		]
+	}]
+}
